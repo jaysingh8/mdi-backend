@@ -8,8 +8,25 @@ const authRoute = require('./routes/authRoute')
 const reviewRoute = require('./routes/reviewRoute')
 const colors = require('colors')
 
+
+app.use(express.urlencoded({extended:true , limit:"50mb"}))
 app.use(express.json());
-app.use(cors());
+const allowedOrigins = [
+    "http://localhost:5000",
+    "https://jolly-quokka-ce122c.netlify.app/"
+];
+app.use(cors({
+    origin : function (origin , callback){
+    if( !origin || allowedOrigins.includes(origin)){
+        callback(null , true);
+    }else{
+        callback(new Error("Not allowed by CORS"))
+    }
+},
+methods : ["GET" ,"POST" , "PUT","DELETE"],
+credentials : true,
+}));
+
 
 connectdb();
 
